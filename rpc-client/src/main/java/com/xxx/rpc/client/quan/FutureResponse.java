@@ -1,4 +1,4 @@
-package com.xxx.rpc.client;
+package com.xxx.rpc.client.quan;
 
 import com.xxx.rpc.common.bean.RpcResponse;
 

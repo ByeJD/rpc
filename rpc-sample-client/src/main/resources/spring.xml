@@ -17,7 +17,7 @@
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 
-    <bean id="myRpcProxy" class="com.xxx.rpc.client.MyRpcProxy">
+    <bean id="myRpcProxy" class="com.xxx.rpc.client.quan.MyRpcProxy">
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 

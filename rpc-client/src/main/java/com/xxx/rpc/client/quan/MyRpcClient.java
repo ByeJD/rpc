@@ -1,7 +1,6 @@
-package com.xxx.rpc.client;
+package com.xxx.rpc.client.quan;
 
 
-import com.sun.xml.internal.messaging.saaj.soap.GifDataContentHandler;
 import com.xxx.rpc.common.bean.RpcRequest;
 import com.xxx.rpc.common.bean.RpcResponse;
 import com.xxx.rpc.common.codec.RpcDecoder;
@@ -98,13 +97,14 @@ public class MyRpcClient {
             lockObject = mapLock.get(key);
         }
 
-        // 双重校验
+        // 这里针对每一个url创建一个锁对象,双重校验
         synchronized (lockObject) {
             channel = map.get(key);
             if (channel != null && channel.isActive()) {
                 return channel;
             }
 
+            // channel不是在激活状态，但是他有可能不为空，如果不为空的话，同步关闭掉。
             if (channel != null) {
                 channel.close().sync();
                 map.remove(key);
@@ -113,7 +113,7 @@ public class MyRpcClient {
             channel = init(host, port);
             if (channel == null || !channel.isActive()) {
                 if (channel != null) {
-                    channel.close();
+                    channel.close().sync();
                 }
                 throw new RuntimeException("failed");
             }
@@ -125,6 +125,9 @@ public class MyRpcClient {
 
     public void send(String host, int port, RpcRequest request, FutureResponse futureResponse) throws InterruptedException {
         Channel channel = getChannel(host, port);
+        // futureResponseMap.put(request.getRequestId(), futureResponse); 和 channel.writeAndFlush(request).sync();能不能调换？
+        // 答案： 不能，如果先调用发送请求,服务器端返回，这个时候futureResponseMap的put动作尚未完成,在ChannelHandler处理的话,可能会出现
+        // 空指针异常的情况。
         futureResponseMap.put(request.getRequestId(), futureResponse);
         channel.writeAndFlush(request).sync();
     }

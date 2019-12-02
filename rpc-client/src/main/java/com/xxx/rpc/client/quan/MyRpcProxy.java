@@ -1,5 +1,6 @@
-package com.xxx.rpc.client;
+package com.xxx.rpc.client.quan;
 
+import com.xxx.rpc.client.RpcProxy;
 import com.xxx.rpc.common.bean.RpcRequest;
 import com.xxx.rpc.common.bean.RpcResponse;
 import com.xxx.rpc.common.util.StringUtil;
