@@ -37,5 +37,6 @@ public class ChannelHandler extends SimpleChannelInboundHandler<RpcResponse> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println(cause.getCause());
+        ctx.close();
     }
 }
