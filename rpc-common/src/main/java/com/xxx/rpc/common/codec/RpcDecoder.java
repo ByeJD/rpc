@@ -23,24 +23,17 @@ public class RpcDecoder extends ByteToMessageDecoder {
 
     @Override
     public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        System.out.println("decode");
         if (in.readableBytes() < 4) {
-            System.out.println("return");
             return;
         }
         in.markReaderIndex();
         int dataLength = in.readInt();
         if (in.readableBytes() < dataLength) {
             in.resetReaderIndex();
-            System.out.println("return 2");
             return;
         }
         byte[] data = new byte[dataLength];
         in.readBytes(data);
         out.add(SerializationUtil.deserialize(data, genericClass));
-
-
-        System.out.println("return 3");
-
     }
 }
